@@ -1,0 +1,63 @@
+{
+  "menu": [
+    {
+      "menuHeader": "Stakeholder"
+    },
+    {
+      "url": "/",
+      "name": "Telaah Kerja Sama",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "dashboard",
+      "submenu": [
+        {
+          "url": "/telaah-kerja-sama",
+          "name": "Pengajuan Telaah",
+          "slug": "telaah-kerja-sama"
+        },
+        {
+          "url": "/monitoring-telaah-kerja-sama",
+          "name": "Monitoring Telaah",
+          "slug": "monitoring-telaah-kerja-sama"
+        }
+      ]
+    },
+    {
+      "url": "/",
+      "name": "Repository",
+      "icon": "menu-icon tf-icons bx bx-copy-alt",
+      "slug": "dashboard",
+      "submenu": [
+        {
+          "url": "/repository-kerja-sama",
+          "name": "Entry Kerja Sama",
+          "slug": "repository-kerja-sama.index"
+        },
+        {
+          "url": "/",
+          "name": "Monitoring Kerja Sama",
+          "slug": "monitoring-telaah-kerja-sama"
+        },
+        {
+          "url": "/",
+          "name": "KSDN (MoU)",
+          "slug": "monitoring-telaah-kerja-sama"
+        }
+      ]
+    },
+    {
+      "menuHeader": "BKMP"
+    },
+    {
+      "name": "BKMP",
+      "icon": "menu-icon tf-icons bx bx-layout",
+      "slug": "bkmp",
+      "submenu": [
+        {
+          "url": "/bkmp/validasi-telaah-kerja-sama",
+          "name": "Validasi Telaah Kerja Sama",
+          "slug": "validasi-telaah-kerja-sama"
+        }
+      ]
+    }
+  ]
+}
