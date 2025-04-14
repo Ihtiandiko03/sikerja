@@ -2,100 +2,134 @@
 
 @section('title', 'Pengajuan Telaah')
 
+@section('page-style')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+@endsection
+
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Telaah/</span> Pengajuan Telaah</h4>
 
+@if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
+
+@if ($errors->any())
+  <div class="alert alert-danger">
+    <ul>
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
+
+<span class="badge bg-label-primary mb-4 p-3 d-flex align-items-center"><i class="icon-base bx bx-file icon-sm me-2"></i> Form Tambah Pengajuan Telaah</span>
 <div class="row">
-  <form method="POST" action="{{ route('telaah-kerja-sama.store') }}" enctype="multipart/form-data">
+  <form method="POST" action="{{ route('telaah-kerja-sama.store') }}" id="form-create" enctype="multipart/form-data">
     @csrf
-
+    @method('POST')
     <div class="row">
         <div class="col-xl-6">
             <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Pengajuan Telaah Kerjasama</h5>
-            </div>
-            <div class="card-body">
-                
-                <div class="mb-3">
-                    <label class="form-label" for="unit_kerja_inisiator">Unit Kerja / Inisiator</label>
-                    <div class="input-group input-group-merge">
-                        <span class="input-group-text"><i class="bx bx-group"></i></span>
-                    <input type="text" class="form-control" name="unit_kerja_inisiator" id="unit_kerja_inisiator" placeholder="Tulis Nama Unit Kerja" required />
+                <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                    <h5 class="mb-0">Pengajuan Telaah Kerjasama</h5>
+                </div>
+                <div class="card-body mt-2">
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="unit_kerja_inisiator">Unit Kerja / Inisiator</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bx bx-group"></i></span>
+                            <select name="unit_kerja_inisiator" id="unit_kerja_inisiator" class="form-select select2" required>
+                                <option value="" selected disabled>Pilih Unit</option>
+                                @foreach ($unit as $u)
+                                    <option value="{{ $u->kd_unit }}">{{ $u->nama_unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="bentuk_kegiatan">Bentuk Kegiatan</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bx bx-run"></i></span>
+                            <select name="bentuk_kegiatan" class="form-select select2" required>
+                                <option value="" selected disabled>Pilih Bentuk Kegiatan</option>
+                                @foreach ($bentuk_kegiatan as $b)
+                                    <option value="{{ $b->id }}">{{ $b->bentuk_kegiatan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="jenis_kerja_sama">Jenis Kerja Sama</label>
+                        <div class="input-group input-group-merge">
+                            <span id="jenis_kerja_sama2" class="input-group-text"><i class="bx bx-network-chart"></i></span>
+                            <select name="jenis_kerja_sama" id="jenis_kerja_sama" class="form-select" required>
+                                <option value="" selected disabled>Pilih Jenis Kerja Sama</option>
+                                <option value="Kerjasama Dalam Negeri">Kerjasama Dalam Negeri</option>
+                                <option value="Kerjasama Luar Negeri">Kerjasama Luar Negeri</option>
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label class="form-label" for="jenis_perjanjian">Jenis Perjanjian</label>
+                        <div class="input-group input-group-merge">
+                            <span id="jenis_perjanjian2" class="input-group-text"><i class="bx bx-network-chart"></i></span>
+                            <select name="jenis_perjanjian" id="jenis_perjanjian" class="form-select" required>
+                                <option value="" selected disabled>Pilih Jenis Perjanjian</option>
+                                <option value="Memorandum of Understanding (MOU)">Memorandum of Understanding (MOU)</option>
+                                <option value="Memorandum of Agreement (MOA)">Memorandum of Agreement (MOA)</option>
+                                <option value="Implementation Arrangement (IA)">Implementation Arrangement (IA)</option>
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label class="form-label" for="judul_kerja_sama">Judul Kerjasama</label>
+                        <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-message-alt-detail"></i></span>
+                        <input type="text" class="form-control" name="judul_kerja_sama" id="judul_kerja_sama" placeholder="Tulis Judul Kerjasama" required />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="dokumen_pengantar">Surat Pengantar (.PDF Max 2 Mb)</label>
+                        <div class="input-group input-group-merge">
+                        <input type="file" class="form-control" name="dokumen_pengantar" id="dokumen_pengantar" accept=".pdf" required />
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="dokumen_telaah">Dokumen Telaah (.Doc Max 10 Mb)</label>
+                        <div class="input-group input-group-merge">
+                        <input type="file" class="form-control" name="dokumen_telaah" id="dokumen_telaah" accept=".docx" required/>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="bentuk_kegiatan">Bentuk Kegiatan</label>
-                    <div class="input-group input-group-merge">
-                        <span class="input-group-text"><i class="bx bx-run"></i></span>
-                    <input type="text" class="form-control" name="bentuk_kegiatan" id="bentuk_kegiatan" placeholder="Tulis Bentuk Kegiatan" required />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="jenis_kerja_sama">Jenis Kerja Sama</label>
-                    <div class="input-group input-group-merge">
-                        <span id="jenis_kerja_sama2" class="input-group-text"><i class="bx bx-network-chart"></i></span>
-                        <select name="jenis_kerja_sama" id="jenis_kerja_sama" class="form-select" required>
-                            <option value="">Pilih Jenis Kegiatan</option>
-                            <option value="Kerjasama Dalam Negeri">Kerjasama Dalam Negeri</option>
-                            <option value="Kerjasama Luar Negeri">Kerjasama Luar Negeri</option>
-                        </select>
-                    </div>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label" for="jenis_perjanjian">Jenis Perjanjian</label>
-                    <div class="input-group input-group-merge">
-                        <span id="jenis_perjanjian2" class="input-group-text"><i class="bx bx-network-chart"></i></span>
-                        <select name="jenis_perjanjian" id="jenis_perjanjian" class="form-select" required>
-                            <option value="">Pilih Jenis Perjanjian</option>
-                            <option value="Memorandum of Understanding (MOU)">Memorandum of Understanding (MOU)</option>
-                            <option value="Agreement On Academic (MOA)">Agreement On Academic (MOA)</option>
-                            <option value="Implementation of Arrangement (IA)">Implementation of Arrangement (IA)</option>
-                        </select>
-                    </div>
-                </div>
-    
-                <div class="mb-3">
-                    <label class="form-label" for="judul_kerja_sama">Judul Kerjasama</label>
-                    <div class="input-group input-group-merge">
-                    <span class="input-group-text"><i class="bx bx-message-alt-detail"></i></span>
-                    <input type="text" class="form-control" name="judul_kerja_sama" id="judul_kerja_sama" placeholder="Tulis Judul Kerjasama" required />
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label" for="dokumen_pengantar">Surat Pengantar (.PDF Max 2 Mb)</label>
-                    <div class="input-group input-group-merge">
-                    <input type="file" class="form-control" name="dokumen_pengantar" id="dokumen_pengantar" accept=".pdf" required />
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label" for="dokumen_telaah">Dokumen Telaah (.Doc Max 10 Mb)</label>
-                    <div class="input-group input-group-merge">
-                    <input type="file" class="form-control" name="dokumen_telaah" id="dokumen_telaah" accept=".docx" required/>
-                    </div>
-                </div>
-    
-    
-                
-                
-            </div>
             </div>
         </div>
         <div class="col-xl-6">
             <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                     <h5 class="mb-0">Mitra Kerja Sama</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body mt-2">
                     
                     <div class="mb-3">
                         <label class="form-label" for="klasifikasi_mitra">Klasifikasi Mitra</label>
                         <div class="input-group input-group-merge">
                             <span class="input-group-text"><i class="bx bx-outline"></i></span>
-                        <input type="text" class="form-control" name="klasifikasi_mitra" id="klasifikasi_mitra" placeholder="Tulis Klasifikasi Mitra Kerja Sama" required/>
+                            <select name="klasifikasi_mitra" class="form-select select2" required>
+                                <option value="" selected disabled>Pilih Klasifikasi Mitra</option>
+                                @foreach ($klasifikasi_mitra as $k)
+                                    <option value="{{ $k->id }}">{{ $k->klasifikasi_mitra }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                    
@@ -135,90 +169,148 @@
         </div>
     </div>
 
+    <div id="containerFormUnit">
+        <div class="col-12 unitKerjaContainer">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                    <h5 class="mb-0 form-title">Unit Kerja #1</h5>
+                </div>
+                <div class="card-body mt-2">
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="unit_kerja">Unit Kerja</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bx bx-buildings"></i></span>
+                            <select name="unit_kerja[]" class="form-select select2" required>
+                                <option value="" selected disabled>Pilih Unit</option>
+                                @foreach ($unit as $u)
+                                    <option value="{{ $u->kd_unit }}">{{ $u->nama_unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                   
+                    <div class="row mb-3">
+                        <div class="col-md-7">
+                            <label class="form-label" for="penandatangan_nama_unit_kerja">Nama Pejabat Penandatangan</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bx bx-user"></i></span>
+                                <input type="text" class="form-control" name="penandatangan_nama_unit_kerja[]"  placeholder="Tulis Nama Pejabat yang menandatangani dokumen" required />
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label" for="jabatan_penandatangan_nama_unit_kerja">Jabatan</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bx bx-id-card"></i></span>
+                                <input type="text" class="form-control" name="jabatan_penandatangan_nama_unit_kerja[]"  placeholder="Tulis Jabatan" required/>
+                            </div>
+                        </div>
+                    </div>
     
-
-    <div class="col-xl" id="unitKerjaContainer">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Unit Kerja</h5>
-            </div>
-            <div class="card-body">
-                
-                <div class="mb-3">
-                    <label class="form-label" for="unit_kerja">Unit Kerja</label>
-                    <div class="input-group input-group-merge">
-                        <span class="input-group-text"><i class="bx bx-buildings"></i></span>
-                        <input type="text" class="form-control" name="unit_kerja[]"  placeholder="Tulis Unit Kerja" required />
-                    </div>
-                </div>
-               
-                <div class="row mb-3">
-                    <div class="col-md-7">
-                        <label class="form-label" for="penandatangan_nama_unit_kerja">Nama Pejabat Penandatangan</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-user"></i></span>
-                            <input type="text" class="form-control" name="penandatangan_nama_unit_kerja[]"  placeholder="Tulis Nama Pejabat yang menandatangani dokumen" required />
+                    <div class="row mb-3">
+                        <div class="col-md-7">
+                            <label class="form-label" for="penanggungjawab_nama_unit_kerja">Nama Penanggungjawab</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bx bx-user"></i></span>
+                                <input type="text" class="form-control" name="penanggungjawab_nama_unit_kerja[]"  placeholder="Tulis Nama Penanggung Jawab" required/>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label" for="jabatan_penanggungjawab_nama_unit_kerja">Jabatan</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bx bx-id-card"></i></span>
+                                <input type="text" class="form-control" name="jabatan_penanggungjawab_nama_unit_kerja[]"  placeholder="Tulis Jabatan" required/>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <label class="form-label" for="jabatan_penandatangan_nama_unit_kerja">Jabatan</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-id-card"></i></span>
-                            <input type="text" class="form-control" name="jabatan_penandatangan_nama_unit_kerja[]"  placeholder="Tulis Jabatan" required/>
+    
+                    <div class="row mb-3">
+                        <div class="col-md-7">
+                            <label class="form-label" for="pic_nama_unit_kerja">Nama PIC</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bx bx-user"></i></span>
+                                <input type="text" class="form-control" name="pic_nama_unit_kerja[]"  placeholder="Tulis Nama PIC" required/>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-7">
-                        <label class="form-label" for="penanggungjawab_nama_unit_kerja">Nama Penanggungjawab</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-user"></i></span>
-                            <input type="text" class="form-control" name="penanggungjawab_nama_unit_kerja[]"  placeholder="Tulis Nama Pejabat yang menandatangani dokumen" required/>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <label class="form-label" for="jabatan_penanggungjawab_nama_unit_kerja">Jabatan</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-id-card"></i></span>
-                            <input type="text" class="form-control" name="jabatan_penanggungjawab_nama_unit_kerja[]"  placeholder="Tulis Jabatan" required/>
+                        <div class="col-md-5">
+                            <label class="form-label" for="contact_person">Contact Person</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bx bx-phone-call"></i></span>
+                                <input type="text" class="form-control" name="contact_person[]"  placeholder="Tulis Contact Person" required/>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-7">
-                        <label class="form-label" for="pic_nama_unit_kerja">Nama PIC</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-user"></i></span>
-                            <input type="text" class="form-control" name="pic_nama_unit_kerja[]"  placeholder="" required/>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <label class="form-label" for="contact_person">Contact Person</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i class="bx bx-phone-call"></i></span>
-                            <input type="text" class="form-control" name="contact_person[]"  placeholder="Tulis Contact Person" required/>
-                        </div>
-                    </div>
-                </div>
-                
-                
-            
             </div>
         </div>
     </div>
 
-
     <!-- Tombol Tambah Data -->
     <div class="col-xl mb-5">
-        <button type="button" id="tambahData" class="btn btn-secondary">Tambah Unit</button>
+        <button type="button" id="tambahData" class="btn btn-secondary btn-sm">Tambah Unit</button>
     </div>
 
     <!-- Tombol Submit -->
     <div class="col-xl text-center">
-        <button type="submit" class="btn btn-primary">Simpan Pengajuan</button>
+        <button type="submit" class="btn btn-primary btn-simpan"><span class="icon-base bx bx-paper-plane icon-sm me-2"></span> Simpan Pengajuan</button>
     </div>
   </form>
 </div>
+@endsection
+
+@section('page-script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            theme: 'bootstrap-5',
+        });
+
+        let formIndex = 1;
+        $('#tambahData').click(function () {
+            let newForm = $('.unitKerjaContainer').first().clone();
+            newForm.find('input').val('');
+            newForm.find('.select2').removeClass('select2-hidden-accessible').removeAttr('data-select2-id').removeAttr('aria-hidden');
+
+            newForm.find('.select2').next('.select2-container').remove(); 
+            formIndex++;
+            newForm.find('.form-title').text('Unit Kerja #' + formIndex);
+            if (newForm.find('.remove-btn').length === 0) {
+                newForm.find('.card-header').append(`
+                    <button type="button" class="btn btn-sm btn-danger remove-btn">
+                        Hapus
+                    </button>
+                `);
+            }
+
+            $('#containerFormUnit').append(newForm);
+            newForm.find('.select2').select2({
+                theme: 'bootstrap-5',
+            });
+        });
+
+        $(document).on('click', '.remove-btn', function () {
+            if ($('.unitKerjaContainer').length > 1) {
+                $(this).closest('.unitKerjaContainer').remove();
+            }
+        });
+        
+        $("#form-create").validate({
+            errorClass: "text-danger",
+            errorPlacement: function(error, element) {
+                if (element.closest('.input-group').length) {
+                    error.insertAfter(element.closest('.input-group'));
+                } else {
+                    error.insertAfter(element); 
+                }
+            },
+            submitHandler: function(form) {
+                form.submit();
+                $('.btn-simpan').addClass('disabled');
+                $('.btn-simpan').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            }
+        });
+    });
+</script>
 @endsection

@@ -4,11 +4,14 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\layouts\Blank;
 use App\Http\Controllers\layouts\Fluid;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\BKMPController;
 use App\Http\Controllers\icons\Boxicons;
 use App\Http\Controllers\cards\CardBasic;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\layouts\Container;
 use App\Http\Controllers\dashboard\Analytics;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\layouts\WithoutMenu;
 use App\Http\Controllers\layouts\WithoutNavbar;
 use App\Http\Controllers\user_interface\Alerts;
@@ -23,6 +26,7 @@ use App\Http\Controllers\user_interface\Carousel;
 use App\Http\Controllers\user_interface\Collapse;
 use App\Http\Controllers\user_interface\Progress;
 use App\Http\Controllers\user_interface\Spinners;
+use App\Http\Controllers\BentukKegiatanController;
 use App\Http\Controllers\form_elements\BasicInput;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Dropdowns;
@@ -30,28 +34,25 @@ use App\Http\Controllers\user_interface\Offcanvas;
 use App\Http\Controllers\user_interface\TabsPills;
 use App\Http\Controllers\form_elements\InputGroups;
 use App\Http\Controllers\form_layouts\VerticalForm;
+use App\Http\Controllers\TelaahKerjasamaController;
 use App\Http\Controllers\user_interface\ListGroups;
 use App\Http\Controllers\user_interface\Typography;
 use App\Http\Controllers\authentications\LoginBasic;
+use App\Http\Controllers\KlasifikasiMitraController;
 use App\Http\Controllers\pages\MiscUnderMaintenance;
 use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
 use App\Http\Controllers\extended_ui\PerfectScrollbar;
 use App\Http\Controllers\pages\AccountSettingsAccount;
+
 use App\Http\Controllers\authentications\RegisterBasic;
+use App\Http\Controllers\RepositoryKerjasamaController;
 use App\Http\Controllers\user_interface\TooltipsPopovers;
 use App\Http\Controllers\pages\AccountSettingsConnections;
 use App\Http\Controllers\pages\AccountSettingsNotifications;
 use App\Http\Controllers\authentications\ForgotPasswordBasic;
-use App\Http\Controllers\user_interface\PaginationBreadcrumbs;
-
-use App\Http\Controllers\RepositoryKerjasamaController;
-use App\Http\Controllers\TelaahKerjasamaController;
 use App\Http\Controllers\MonitoringTelaahKerjasamaController;
-use App\Http\Controllers\BKMPController;
-
-// Main Page Route
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+use App\Http\Controllers\user_interface\PaginationBreadcrumbs;
 
 // layout
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
@@ -122,29 +123,49 @@ Route::get('/form/layouts-horizontal', [HorizontalForm::class, 'index'])->name('
 // tables
 Route::get('/tables/basic', [TablesBasic::class, 'index'])->name('tables-basic');
 
+Route::get('/', [LoginController::class, 'index'])->name('login.index');
+Route::middleware(['role:admin,user'])->group(function () {
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
+
 // Telaah Kerjasama
-Route::prefix('telaah-kerja-sama')->group(function () {
+Route::middleware(['role:admin,user'])->prefix('telaah-kerja-sama')->group(function () {
   Route::get('/', [TelaahKerjasamaController::class, 'index'])->name('telaah-kerja-sama');
   Route::get('/create', [TelaahKerjasamaController::class, 'create'])->name('telaah-kerja-sama.create');
   Route::post('/store', [TelaahKerjasamaController::class, 'store'])->name('telaah-kerja-sama.store');
-  Route::get('/edit/{id}', [TelaahKerjasamaController::class, 'edit'])->name('telaah-kerja-sama.edit');
-  Route::post('/update/{id}', [TelaahKerjasamaController::class, 'update'])->name('telaah-kerja-sama.update');
   Route::get('/delete/{id}', [TelaahKerjasamaController::class, 'delete'])->name('telaah-kerja-sama.delete');
-
-  Route::get('/{id}/edit', [TelaahKerjasamaController::class, 'edit'])->name('telaah-kerja-sama.edit');
-  Route::put('/{id}/update', [TelaahKerjasamaController::class, 'update'])->name('telaah-kerja-sama.update');
 });
-Route::prefix('monitoring-telaah-kerja-sama')->group(function () {
+
+Route::middleware(['role:admin'])->prefix('telaah-kerja-sama')->group(function () {
+  Route::put('/{id}/validasi', [TelaahKerjasamaController::class, 'validasi'])->name('telaah-kerja-sama.validasi');
+});
+
+Route::middleware(['role:user'])->prefix('telaah-kerja-sama')->group(function () {
+  Route::get('/{id}/edit', [TelaahKerjasamaController::class, 'edit'])->name('telaah-kerja-sama.edit');
+  Route::put('/{id}/revisi', [TelaahKerjasamaController::class, 'revisi'])->name('telaah-kerja-sama.revisi');
+});
+
+
+Route::middleware(['role:admin,user'])->prefix('monitoring-telaah-kerja-sama')->group(function () {
   Route::get('/', [MonitoringTelaahKerjasamaController::class, 'index'])->name('monitoring-telaah-kerja-sama');
   Route::get('/detail/{id}', [MonitoringTelaahKerjasamaController::class, 'show'])->name(
     'monitoring-telaah-kerja-sama.show'
   );
 });
 
-Route::prefix('repository-kerja-sama')->group(function () {
+Route::middleware(['role:admin,user'])->prefix('repository-kerja-sama')->group(function () {
   Route::get('/', [RepositoryKerjasamaController::class, 'index'])->name('repository-kerja-sama.index');
   Route::get('/create', [RepositoryKerjasamaController::class, 'create'])->name('repository-kerja-sama.create');
   Route::post('/store', [RepositoryKerjasamaController::class, 'store'])->name('repository-kerja-sama.store');
+  Route::get('/detail/{id}', [RepositoryKerjasamaController::class, 'show'])->name('repository-kerja-sama.show');
+  Route::get('/{id}/edit', [RepositoryKerjasamaController::class, 'edit'])->name('repository-kerja-sama.edit');
+  Route::put('/{id}/update', [RepositoryKerjasamaController::class, 'update'])->name('repository-kerja-sama.update');
+  Route::delete('/{id}/delete', [RepositoryKerjasamaController::class, 'delete'])->name('repository-kerja-sama.delete');
+});
+
+Route::middleware(['role:admin'])->group(function () {
+  Route::resource('klasifikasi-mitra', KlasifikasiMitraController::class);
+  Route::resource('bentuk-kegiatan', BentukKegiatanController::class);
 });
 
 Route::prefix('bkmp')->group(function () {
@@ -152,4 +173,30 @@ Route::prefix('bkmp')->group(function () {
   Route::put('/store-validasi-telaah-kerja-sama', [BKMPController::class, 'storeValidasiTelaah'])->name(
     'bkmp.storevalidasitelaah'
   );
+});
+
+Route::get('/login/user', function () {
+  Session::flush();
+  $userData = [
+      'id' => 'PEG001',
+      'name' => 'Mulyono S.Kom',
+      'role_kerja' => 'user',
+      'is_login' => true
+  ];
+
+  Session::put($userData);
+  return Session::all();
+});
+
+Route::get('/login/admin', function () {
+  Session::flush();
+  $userData = [
+      'id' => 'PEG002',
+      'name' => 'Joko S.Kom',
+      'role_kerja' => 'admin',
+      'is_login' => true
+  ];
+
+  Session::put($userData);
+  return Session::all();
 });

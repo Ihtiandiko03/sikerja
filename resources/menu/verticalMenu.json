@@ -1,18 +1,48 @@
 {
   "menu": [
     {
+      "menuHeader": "Dashboard"
+    },
+    {
+      "url": "/dashboard",
+      "name": "Home",
+      "icon": "menu-icon tf-icons bx bx-home-circle",
+      "slug": "dashboard"
+    },
+    {
+      "menuHeader": "Master"
+    },
+    {
+      "url": "/",
+      "name": "Master Data",
+      "icon": "menu-icon tf-icons bx bx-data",
+      "slug": ["klasifikasi-mitra.index", "bentuk-kegiatan.index"],
+      "submenu": [
+        {
+          "url": "/klasifikasi-mitra",
+          "name": "Klasifikasi Mitra",
+          "slug": "klasifikasi-mitra.index"
+        },
+        {
+          "url": "/bentuk-kegiatan",
+          "name": "Bentuk Kegiatan",
+          "slug": "bentuk-kegiatan.index"
+        }
+      ]
+    },
+    {
       "menuHeader": "Stakeholder"
     },
     {
       "url": "/",
       "name": "Telaah Kerja Sama",
-      "icon": "menu-icon tf-icons bx bx-home-circle",
-      "slug": "dashboard",
+      "icon": "menu-icon tf-icons bx bx-book-content",
+      "slug": ["telaah-kerja-sama.create", "monitoring-telaah-kerja-sama"],
       "submenu": [
         {
-          "url": "/telaah-kerja-sama",
+          "url": "/telaah-kerja-sama/create",
           "name": "Pengajuan Telaah",
-          "slug": "telaah-kerja-sama"
+          "slug": "telaah-kerja-sama.create"
         },
         {
           "url": "/monitoring-telaah-kerja-sama",
@@ -25,37 +55,17 @@
       "url": "/",
       "name": "Repository",
       "icon": "menu-icon tf-icons bx bx-copy-alt",
-      "slug": "dashboard",
+      "slug": ["repository-kerja-sama.create", "repository-kerja-sama.index", "repository-kerja-sama.show"],
       "submenu": [
+        {
+          "url": "/repository-kerja-sama/create",
+          "name": "Entry Kerja Sama",
+          "slug": "repository-kerja-sama.create"
+        },
         {
           "url": "/repository-kerja-sama",
-          "name": "Entry Kerja Sama",
-          "slug": "repository-kerja-sama.index"
-        },
-        {
-          "url": "/",
           "name": "Monitoring Kerja Sama",
-          "slug": "monitoring-telaah-kerja-sama"
-        },
-        {
-          "url": "/",
-          "name": "KSDN (MoU)",
-          "slug": "monitoring-telaah-kerja-sama"
-        }
-      ]
-    },
-    {
-      "menuHeader": "BKMP"
-    },
-    {
-      "name": "BKMP",
-      "icon": "menu-icon tf-icons bx bx-layout",
-      "slug": "bkmp",
-      "submenu": [
-        {
-          "url": "/bkmp/validasi-telaah-kerja-sama",
-          "name": "Validasi Telaah Kerja Sama",
-          "slug": "validasi-telaah-kerja-sama"
+          "slug": "repository-kerja-sama.index"
         }
       ]
     }
