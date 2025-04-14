@@ -25,9 +25,9 @@ class TelaahKerjasamaController extends Controller
   public function create()
   {
     $unit = DB::table('db_simpeg.tb_unit')
-            ->select('kd_unit', 'nama_unit')
-            ->get();
-    
+      ->select('kd_unit', 'nama_unit')
+      ->get();
+
     $klasifikasi_mitra = KlasifikasiMitra::all();
     $bentuk_kegiatan = BentukKegiatan::all();
 
@@ -140,13 +140,12 @@ class TelaahKerjasamaController extends Controller
 
     if (Session::get('role_kerja') == 'admin') {
       $telaah = Telaah::findOrFail($decryptId);
-    } elseif(Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::where('created_by', Session::get('id'))
-        ->findOrFail($decryptId);
+    } elseif (Session::get('role_kerja') == 'user') {
+      $telaah = Telaah::where('created_by', Session::get('id'))->findOrFail($decryptId);
     } else {
       abort(403, 'Unauthorized page.');
     }
-    
+
     $unitKerja = TelaahUnitKerja::where('id_telaah', $telaah->id)->get();
 
     $unit = DB::table('db_simpeg.tb_unit')
@@ -156,7 +155,10 @@ class TelaahKerjasamaController extends Controller
     $klasifikasi_mitra = KlasifikasiMitra::all();
     $bentuk_kegiatan = BentukKegiatan::all();
 
-    return view('pengajuan_telaah.revisi', compact('telaah', 'unitKerja', 'unit', 'klasifikasi_mitra', 'bentuk_kegiatan'));
+    return view(
+      'pengajuan_telaah.revisi',
+      compact('telaah', 'unitKerja', 'unit', 'klasifikasi_mitra', 'bentuk_kegiatan')
+    );
   }
 
   public function revisi(Request $request, $id)
@@ -165,9 +167,8 @@ class TelaahKerjasamaController extends Controller
 
     if (Session::get('role_kerja') == 'admin') {
       $telaah = Telaah::findOrFail($decryptId);
-    } elseif(Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::where('created_by', Session::get('id'))
-        ->findOrFail($decryptId);
+    } elseif (Session::get('role_kerja') == 'user') {
+      $telaah = Telaah::where('created_by', Session::get('id'))->findOrFail($decryptId);
     } else {
       abort(403, 'Unauthorized page.');
     }
@@ -206,7 +207,6 @@ class TelaahKerjasamaController extends Controller
     DB::beginTransaction();
 
     try {
-
       if ($request->hasFile('dokumen_pengantar')) {
         $dokumenPengantarPath = $request->file('dokumen_pengantar')->store('dokumen_pengantar', 'public');
         $telaah->dokumen_pengantar = $dokumenPengantarPath;
@@ -274,8 +274,9 @@ class TelaahKerjasamaController extends Controller
 
     if (Session::get('role_kerja') == 'admin') {
       $telaah = Telaah::where('status_telaah', 'Dalam Proses')->findOrFail($decryptId);
-    } elseif(Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::where('status_telaah', 'Dalam Proses')->where('created_by', Session::get('id'))
+    } elseif (Session::get('role_kerja') == 'user') {
+      $telaah = Telaah::where('status_telaah', 'Dalam Proses')
+        ->where('created_by', Session::get('id'))
         ->findOrFail($decryptId);
     } else {
       abort(403, 'Unauthorized page.');
@@ -290,6 +291,7 @@ class TelaahKerjasamaController extends Controller
 
     try {
       $telaah->status_telaah = $validated['status'] === 'TERIMA' ? 'Selesai' : 'Ditolak';
+      $telaah->tanggal_keluar_bkmp = now()->format('Y-m-d');
       $telaah->save();
 
       RiwayatTelaah::create([

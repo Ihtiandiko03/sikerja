@@ -8,88 +8,100 @@ use App\Models\BentukKegiatan;
 
 class BentukKegiatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = BentukKegiatan::query();
+  /**
+   * Display a listing of the resource.
+   */
+  public function index(Request $request)
+  {
+    if ($request->ajax()) {
+      $data = BentukKegiatan::query();
 
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:;" class="edit-btn btn btn-sm btn-icon btn-outline-info" data-id="'.$row->id.'" data-bentukkegiatan="'.e($row->bentuk_kegiatan).'" data-bs-toggle="modal" data-bs-target="#editModal"><span class="icon-base bx bx-pencil icon-md"></span></a>
-                            <a href="javascript:;" class="delete-btn btn btn-sm btn-icon btn-outline-danger" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="icon-base bx bx-trash-alt icon-md"></span></a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
-        return view('bentuk_kegiatan.index');
+      return Datatables::of($data)
+        ->addIndexColumn()
+        ->addColumn('action', function ($row) {
+          $btn =
+            '<a href="javascript:;" class="edit-btn btn btn-sm btn-icon btn-outline-info" data-id="' .
+            $row->id .
+            '" data-bentukkegiatan="' .
+            e($row->bentuk_kegiatan) .
+            '" data-bs-toggle="modal" data-bs-target="#editModal"><span class="icon-base bx bx-pencil icon-md"></span></a>
+                            <a href="javascript:;" class="delete-btn btn btn-sm btn-icon btn-outline-danger" data-id="' .
+            $row->id .
+            '" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="icon-base bx bx-trash-alt icon-md"></span></a>';
+          return $btn;
+        })
+        ->rawColumns(['action'])
+        ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    return view('bentuk_kegiatan.index');
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'bentuk_kegiatan' => 'required|max:255',
-        ]);
+  /**
+   * Show the form for creating a new resource.
+   */
+  public function create()
+  {
+    //
+  }
 
-        BentukKegiatan::create($request->only('bentuk_kegiatan'));
+  /**
+   * Store a newly created resource in storage.
+   */
+  public function store(Request $request)
+  {
+    $request->validate([
+      'bentuk_kegiatan' => 'required|max:255',
+    ]);
 
-        return redirect()->route('bentuk-kegiatan.index')->with('success', 'Bentuk Kegiatan berhasil disimpan!');
-    }
+    BentukKegiatan::create($request->only('bentuk_kegiatan'));
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    return redirect()
+      ->route('bentuk-kegiatan.index')
+      ->with('success', 'Bentuk Kegiatan berhasil disimpan!');
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+  /**
+   * Display the specified resource.
+   */
+  public function show(string $id)
+  {
+    //
+  }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, BentukKegiatan $bentuk_kegiatan)
-    {
-        $request->validate([
-            'bentuk_kegiatan' => 'required|max:255',
-        ]);
+  /**
+   * Show the form for editing the specified resource.
+   */
+  public function edit(string $id)
+  {
+    //
+  }
 
-        $bentuk_kegiatan->update($request->only('bentuk_kegiatan'));
+  /**
+   * Update the specified resource in storage.
+   */
+  public function update(Request $request, BentukKegiatan $bentuk_kegiatan)
+  {
+    $request->validate([
+      'bentuk_kegiatan' => 'required|max:255',
+    ]);
 
-        return redirect()->route('bentuk-kegiatan.index')->with('success', 'Bentuk Kegiatan berhasil diperbarui!');
-    }
+    $bentuk_kegiatan->update($request->only('bentuk_kegiatan'));
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(BentukKegiatan $bentuk_kegiatan)
-    {
-        $bentuk_kegiatan->delete();
+    return redirect()
+      ->route('bentuk-kegiatan.index')
+      ->with('success', 'Bentuk Kegiatan berhasil diperbarui!');
+  }
 
-        return redirect()->route('bentuk-kegiatan.index')->with('success', 'Bentuk Kegiatan berhasil dihapus!');
-    }   
+  /**
+   * Remove the specified resource from storage.
+   */
+  public function destroy(BentukKegiatan $bentuk_kegiatan)
+  {
+    $bentuk_kegiatan->delete();
 
+    return redirect()
+      ->route('bentuk-kegiatan.index')
+      ->with('success', 'Bentuk Kegiatan berhasil dihapus!');
+  }
 }

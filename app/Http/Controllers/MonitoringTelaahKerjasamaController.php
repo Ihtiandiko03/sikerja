@@ -15,9 +15,13 @@ class MonitoringTelaahKerjasamaController extends Controller
   public function index(Request $request)
   {
     if ($request->ajax()) {
-      $data = Telaah::selectRaw('telaah.*, u.nama_unit')
-          ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah.unit_kerja_inisiator');
-      
+      $data = Telaah::selectRaw('telaah.*, u.nama_unit')->join(
+        'db_simpeg.tb_unit as u',
+        'u.kd_unit',
+        '=',
+        'telaah.unit_kerja_inisiator'
+      );
+
       if (Session::get('role_kerja') == 'user') {
         $data->where('telaah.created_by', Session::get('id'));
       }
@@ -38,20 +42,23 @@ class MonitoringTelaahKerjasamaController extends Controller
 
       return Datatables::of($data)
         ->addIndexColumn()
-        ->addColumn('action', function($row){
-            $btn = '<a href="'.route('monitoring-telaah-kerja-sama.show', Crypt::encrypt($row->id)).'" class="btn btn-sm btn-primary">Detail</a>';
-            return $btn;
+        ->addColumn('action', function ($row) {
+          $btn =
+            '<a href="' .
+            route('monitoring-telaah-kerja-sama.show', Crypt::encrypt($row->id)) .
+            '" class="btn btn-sm btn-primary">Detail</a>';
+          return $btn;
         })
-        ->addColumn('status', function($row){
-            if ($row->status_telaah === 'Selesai') {
-              $bg_color = 'bg-label-success';
-            } elseif ($row->status_telaah === 'Ditolak') {
-              $bg_color = 'bg-label-danger';
-            } else {
-              $bg_color = 'bg-label-info';
-            }
-            $btn = '<span class="badge '.$bg_color.'">'.$row->status_telaah.'</span>';
-            return $btn;
+        ->addColumn('status', function ($row) {
+          if ($row->status_telaah === 'Selesai') {
+            $bg_color = 'bg-label-success';
+          } elseif ($row->status_telaah === 'Ditolak') {
+            $bg_color = 'bg-label-danger';
+          } else {
+            $bg_color = 'bg-label-info';
+          }
+          $btn = '<span class="badge ' . $bg_color . '">' . $row->status_telaah . '</span>';
+          return $btn;
         })
         ->rawColumns(['action', 'status'])
         ->make(true);
@@ -65,13 +72,17 @@ class MonitoringTelaahKerjasamaController extends Controller
     $id = Crypt::decrypt($encryptedId);
 
     if (Session::get('role_kerja') == 'admin') {
-      $telaah = Telaah::selectRaw('telaah.*, u.nama_unit, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc')
+      $telaah = Telaah::selectRaw(
+        'telaah.*, u.nama_unit, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc'
+      )
         ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah.unit_kerja_inisiator')
         ->join('klasifikasi_mitra as km', 'km.id', '=', 'telaah.klasifikasi_mitra')
         ->join('bentuk_kegiatan as bk', 'bk.id', '=', 'telaah.bentuk_kegiatan')
         ->findOrFail($id);
-    } elseif(Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::selectRaw('telaah.*, u.nama_unit, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc')
+    } elseif (Session::get('role_kerja') == 'user') {
+      $telaah = Telaah::selectRaw(
+        'telaah.*, u.nama_unit, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc'
+      )
         ->where('telaah.created_by', Session::get('id'))
         ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah.unit_kerja_inisiator')
         ->join('klasifikasi_mitra as km', 'km.id', '=', 'telaah.klasifikasi_mitra')
@@ -81,7 +92,7 @@ class MonitoringTelaahKerjasamaController extends Controller
       abort(403, 'Unauthorized page.');
     }
 
-    $unitKerja = TelaahUnitKerja::selectRaw('telaah_unit_kerja.*, u.nama_unit')      
+    $unitKerja = TelaahUnitKerja::selectRaw('telaah_unit_kerja.*, u.nama_unit')
       ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah_unit_kerja.unit_kerja')
       ->where('id_telaah', $id)
       ->get();

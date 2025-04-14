@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label" >Tanggal Masuk Hukum</label>
                                     <div class="input-group input-group-merge">
@@ -196,7 +196,7 @@
                                         <input type="text" class="form-control" value="{{$telaah->tanggal_keluar_sekretariat?$telaah->tanggal_keluar_sekretariat:'-'}}" readonly/>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <label class="form-label">Dokumen Pengantar</label>
