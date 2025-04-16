@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use DataTables;
+use App\Models\Kerjasama;
 use App\Services\Restricted;
 use Illuminate\Http\Request;
 use App\Services\Oauth2Client;
@@ -121,8 +123,26 @@ class LoginController extends Controller
     return redirect()->to($this->appsUrl . 'user/signout?redirect_to=' . url('/'));
   }
 
-  public function halamanutama()
+  public function halamanutama(Request $request)
   {
+    if ($request->ajax()) {
+      $data = Kerjasama::where('is_publish', 1)
+        ->select('nomor_kerjasama', 'judul_kerjasama', 'jenis_perjanjian', 'masa_berlaku_tmt', 'masa_berlaku_tat', 'status_kerjasama')
+        ->orderBy('created_at', 'desc');
+
+      return Datatables::of($data)
+          ->addIndexColumn()
+          ->addColumn('tmt', function ($row) {
+            $date = date('d M Y', strtotime($row->masa_berlaku_tmt));
+            return $date;
+          })
+          ->addColumn('tat', function ($row) {
+            $date = date('d M Y', strtotime($row->masa_berlaku_tat));
+            return $date;
+          })
+          ->make(true);
+    }
+
     $totalMOU = DB::table('kerjasama')
       ->where('jenis_perjanjian', 'Memorandum of Understanding (MOU)')
       ->count();
@@ -132,7 +152,7 @@ class LoginController extends Controller
     $totalIA = DB::table('kerjasama')
       ->where('jenis_perjanjian', 'Implementation Arrangement (IA)')
       ->count();
-
+    
     return view('index', compact('totalMOU', 'totalMOA', 'totalIA'));
   }
 }

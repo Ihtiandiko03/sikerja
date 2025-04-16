@@ -13,27 +13,27 @@
   /*=====================================
     Sticky
     ======================================= */
-  window.onscroll = function () {
-    const header_navbar = document.querySelector('.navbar-area');
-    const sticky = header_navbar.offsetTop;
-    const logo = document.querySelector('.navbar-brand img');
+  // window.onscroll = function () {
+  //   const header_navbar = document.querySelector('.navbar-area');
+  //   const sticky = header_navbar.offsetTop;
+  //   const logo = document.querySelector('.navbar-brand img');
 
-    if (window.pageYOffset > sticky) {
-      header_navbar.classList.add('sticky');
-      logo.src = '/assets/img/logo_itera_bulet.png';
-    } else {
-      header_navbar.classList.remove('sticky');
-      logo.src = '/assets/img/logo_itera_bulet.png';
-    }
+  //   if (window.pageYOffset > sticky) {
+  //     header_navbar.classList.add('sticky');
+  //     logo.src = '/assets/img/logo_itera_bulet.png';
+  //   } else {
+  //     header_navbar.classList.remove('sticky');
+  //     logo.src = '/assets/img/logo_itera_bulet.png';
+  //   }
 
-    // show or hide the back-top-top button
-    const backToTo = document.querySelector('.scroll-top');
-    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-      backToTo.style.display = 'flex';
-    } else {
-      backToTo.style.display = 'none';
-    }
-  };
+  //   // show or hide the back-top-top button
+  //   const backToTo = document.querySelector('.scroll-top');
+  //   if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+  //     backToTo.style.display = 'flex';
+  //   } else {
+  //     backToTo.style.display = 'none';
+  //   }
+  // };
 
   // for menu scroll
   const pageLink = document.querySelectorAll('.page-scroll');

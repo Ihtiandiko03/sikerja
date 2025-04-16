@@ -197,51 +197,37 @@
               <div class="col-lg-12">
             <div class="section-title mb-30 text-center">
               <h2 class="mb-25 wow fadeInUp" data-wow-delay=".2s">
-                  Jenis Kerjasama
+                  Daftar Kerjasama
               </h2>
               <p class="wow fadeInUp" data-wow-delay=".4s">
-                  Berikut adalah daftar jenis kerjasama yang dilakukan oleh Institut Teknologi Sumatera. Setiap kerjasama memiliki informasi terkait Mitra, Periode, dan Deskripsi yang berbeda-beda.
+                  Berikut adalah daftar kerjasama yang dilakukan oleh Institut Teknologi Sumatera. Setiap kerjasama memiliki informasi terkait Mitra, Periode, dan Deskripsi yang berbeda-beda.
               </p>
             </div>
               </div>
             </div>
             <div class="row">
               <div class="col-lg-12">
-                <div class="table-responsive wow fadeInUp" data-wow-delay=".6s">
-                    <table class="table table-bordered">
-                      <thead style="background-color: #5864ff; color: white; font-size: 18px; text-align: center;">
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Jenis Kerjasama</th>
-                          <th scope="col">Mitra</th>
-                          <th scope="col">Periode</th>
-                          <th scope="col">Deskripsi</th>
-                        </tr>
-                      </thead>
-                      <tbody style="font-size: 18px;">
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>Penelitian Bersama</td>
-                          <td>PT Inovasi Teknologi</td>
-                          <td>2023-2025</td>
-                          <td>Kerjasama dalam bidang penelitian teknologi ramah lingkungan.</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>Pengabdian Masyarakat</td>
-                          <td>Yayasan Peduli Desa</td>
-                          <td>2023-2024</td>
-                          <td>Program pengembangan desa berbasis teknologi.</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>Magang Mahasiswa</td>
-                          <td>PT Industri Kreatif</td>
-                          <td>2023-2024</td>
-                          <td>Kerjasama untuk menyediakan program magang bagi mahasiswa.</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                <div class="card wow fadeInUp" data-wow-delay=".6s">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="datatable">
+                          <thead style="background-color: #5864ff; color: white; font-size: 18px; text-align: center;">
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">No Kerja Sama</th>
+                              <th scope="col">Judul Kerja Sama</th>
+                              <th scope="col">Jenis Perjanjian</th>
+                              <th scope="col">TMT</th>
+                              <th scope="col">TAT</th>
+                              <th scope="col">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody style="font-size: 18px;">
+    
+                          </tbody>
+                        </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -258,8 +244,7 @@
                   <p style="font-size: 20pt; color: white;">Kerjasama</p>
                 </div>
                 <p class="desc mb-30 text-white">
-                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                  dinonumy eirmod tempor invidunt.
+                  Made with  by <a href="https://tik.itera.ac.id/" class="text-light fw-bold" target="_blank">UPA TIK</a>
                 </p>
                 {{-- <ul class="socials">
                   <li>
@@ -285,10 +270,10 @@
               <div class="footer-widget">
                 <h3>ITERA</h3>
                 <ul class="links">
-                  <li><a href="http://siakad.itera.ac.id/">Siakad</a></li>
-                  <li><a href="https://pmb.itera.ac.id/">PMB ITERA</a></li>
-                  <li><a href="http://tik.itera.ac.id/id/">UPT TIK</a></li>
-                  <li><a href="http://pusatbahasa.itera.ac.id//">UPT Bahasa</a></li>
+                  <li><a href="http://siakad.itera.ac.id">Siakad</a></li>
+                  <li><a href="https://pmb.itera.ac.id">PMB ITERA</a></li>
+                  <li><a href="http://tik.itera.ac.id">UPT TIK</a></li>
+                  <li><a href="http://pusatbahasa.itera.ac.id">UPT Bahasa</a></li>
                 </ul>
               </div>
             </div>
@@ -298,9 +283,9 @@
                 <br><br>
                 <ul class="links">
                   <li><a href="javascript:void(0)">UPT K3L</a></li>
-                  <li><a href="http://perpustakaan.itera.ac.id//">UPT Perpustakaan</a></li>
-                  <li><a href="https://ilab.itera.ac.id/">UPT Laboratorium</a></li>
-                  <li><a href="http://iao-essecs.itera.ac.id//">UPT OAIL</a></li>
+                  <li><a href="http://perpustakaan.itera.ac.id">UPT Perpustakaan</a></li>
+                  <li><a href="https://ilab.itera.ac.id">UPT Laboratorium</a></li>
+                  <li><a href="http://iao-essecs.itera.ac.id">UPT OAIL</a></li>
                 </ul>
               </div>
             </div>
@@ -309,9 +294,9 @@
               <div class="footer-widget">
                 <br><br>
                 <ul class="links">
-                  <li><a href="http://kebunraya.itera.ac.id//">UPT Kebun Raya</a></li>
-                  <li><a href="http://mkg.itera.ac.id//">UPT MKG</a></li>
-                  <li><a href="https://www.itera.ac.id/humas-itera//">Humas</a></li>
+                  <li><a href="http://kebunraya.itera.ac.id">UPT Kebun Raya</a></li>
+                  <li><a href="http://mkg.itera.ac.id">UPT MKG</a></li>
+                  <li><a href="https://www.itera.ac.id/humas-itera">Humas</a></li>
                 </ul>
               </div>
             </div>
@@ -326,45 +311,65 @@
       <i class="lni lni-chevron-up"></i>
     </a> --}}
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-      var totalMOU = @json($totalMOU);
-      var totalMOA = @json($totalMOA);
-      var totalIA = @json($totalIA);
-
-      function animateValue(id, start, end, duration) {
-        var obj = document.getElementById(id);
-        var range = end - start;
-        var minTimer = 50;
-        var stepTime = Math.abs(Math.floor(duration / range));
-        stepTime = Math.max(stepTime, minTimer);
-        var startTime = new Date().getTime();
-        var endTime = startTime + duration;
-        var timer;
-
-        function run() {
-        var now = new Date().getTime();
-        var remaining = Math.max((endTime - now) / duration, 0);
-        var value = Math.round(end - (remaining * range));
-        obj.innerHTML = value;
-        if (value == end) {
-          clearInterval(timer);
-        }
-        }
-
-        timer = setInterval(run, stepTime);
-        run();
-      }
-
-      animateValue("counter", 0, totalMOU, 3000);
-      animateValue("counter2", 0, totalMOA, 3000);
-      animateValue("counter3", 0, totalIA, 3000);
-      });
-    </script>
-
     <!-- ======== JS here ======== -->
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/wow.min.js') }}"></script>
     <script src="{{ asset('assets/js/mainlanding.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.2.2/datatables.min.css" rel="stylesheet" integrity="sha384-M6C9anzq7GcT0g1mv0hVorHndQDVZLVBkRVdRb2SsQT7evLamoeztr1ce+tvn+f2" crossorigin="anonymous">
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.2.2/datatables.min.js" integrity="sha384-k90VzuFAoyBG5No1d5yn30abqlaxr9+LfAPp6pjrd7U3T77blpvmsS8GqS70xcnH" crossorigin="anonymous"></script>
+    <script>
+      $(document).ready(function() {
+        var totalMOU = @json($totalMOU);
+        var totalMOA = @json($totalMOA);
+        var totalIA = @json($totalIA);
+
+        function animateValue(id, start, end, duration) {
+          var obj = document.getElementById(id);
+          var range = end - start;
+          var minTimer = 50;
+          var stepTime = Math.abs(Math.floor(duration / range));
+          stepTime = Math.max(stepTime, minTimer);
+          var startTime = new Date().getTime();
+          var endTime = startTime + duration;
+          var timer;
+
+          function run() {
+            var now = new Date().getTime();
+            var remaining = Math.max((endTime - now) / duration, 0);
+            var value = Math.round(end - (remaining * range));
+            obj.innerHTML = value;
+            if (value == end) {
+              clearInterval(timer);
+            }
+          }
+
+          timer = setInterval(run, stepTime);
+          run();
+        }
+
+        animateValue("counter", 0, totalMOU, 3000);
+        animateValue("counter2", 0, totalMOA, 3000);
+        animateValue("counter3", 0, totalIA, 3000);
+
+        var table = $('#datatable').DataTable({
+          processing: true,
+          serverSide: true,
+          pageLength: 5,
+          ajax: {
+            url: '{{ url()->current() }}',
+          },
+          columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center', orderable: false, searchable: false},
+            {data: 'nomor_kerjasama', name: 'nomor_kerjasama', className: 'text-center', orderable: false},
+            {data: 'judul_kerjasama', name: 'judul_kerjasama'},
+            {data: 'jenis_perjanjian', name: 'jenis_perjanjian', className: 'text-center'},
+            {data: 'tmt', name: 'tmt', className: 'text-center', orderable: false},
+            {data: 'tat', name: 'tat', className: 'text-center', orderable: false},
+            {data: 'status_kerjasama', name: 'status_kerjasama', className: 'text-center', orderable: false},
+          ]
+        });
+      });
+  </script>
   </body>
 </html>
