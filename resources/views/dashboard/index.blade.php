@@ -12,7 +12,7 @@
                 <h5 class="card-title text-primary mb-3">Selamat Datang 🎉</h5>
                 <p class="mb-3">Aplikasi Kerja Sama ITERA</p>
   
-                <a href="javascript:;" class="btn btn-sm btn-outline-primary">Lihat Kerja Sama</a>
+                <a href="{{ route('repository-kerja-sama.index') }}" class="btn btn-sm btn-outline-primary">Lihat Kerja Sama</a>
               </div>
             </div>
             <div class="col-sm-5 text-center text-sm-left">
@@ -32,7 +32,7 @@
               </div>
             </div>
             <p class="mb-1">MoU</p>
-            <h4 class="card-title mb-3">999</h4>
+            <h4 class="card-title mb-3">{{ $total_kerjasama_mou->total }}</h4>
           </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
               </div>
             </div>
             <p class="mb-1">MoA</p>
-            <h4 class="card-title mb-3">999</h4>
+            <h4 class="card-title mb-3">{{ $total_kerjasama_moa->total }}</h4>
           </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
               </div>
             </div>
             <p class="mb-1">IA</p>
-            <h4 class="card-title mb-3">999</h4>
+            <h4 class="card-title mb-3">{{ $total_kerjasama_ia->total }}</h4>
           </div>
         </div>
     </div>
