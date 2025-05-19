@@ -101,9 +101,18 @@ class LoginController extends Controller
         'levels' => $tmpLevel,
         'role_kerja' => 'user',
       ];
+      // dd($userData);
 
-      if ($userData['email'] == 'senja.fitriana@staff.itera.ac.id') {
-        $userData['role_kerja'] = 'admin';
+      // Cek di tabel user berdasarkan email, jika ada sesuaikan role_kerja dengan role di tabel user
+      $user = \DB::table('users')
+        ->where('id_pegawai', $userData['id'])
+        ->first();
+      if (!$user) {
+        return redirect()->route('restricted_page');
+      }
+      if (isset($user->role_kerja)) {
+        // dd($user);
+        $userData['role_kerja'] = $user->role_kerja == 0 ? 'admin' : 'user';
       }
 
       Session::put($userData);
@@ -127,20 +136,27 @@ class LoginController extends Controller
   {
     if ($request->ajax()) {
       $data = Kerjasama::where('is_publish', 1)
-        ->select('nomor_kerjasama', 'judul_kerjasama', 'jenis_perjanjian', 'masa_berlaku_tmt', 'masa_berlaku_tat', 'status_kerjasama')
+        ->select(
+          'nomor_kerjasama',
+          'judul_kerjasama',
+          'jenis_perjanjian',
+          'masa_berlaku_tmt',
+          'masa_berlaku_tat',
+          'status_kerjasama'
+        )
         ->orderBy('created_at', 'desc');
 
       return Datatables::of($data)
-          ->addIndexColumn()
-          ->addColumn('tmt', function ($row) {
-            $date = date('d M Y', strtotime($row->masa_berlaku_tmt));
-            return $date;
-          })
-          ->addColumn('tat', function ($row) {
-            $date = date('d M Y', strtotime($row->masa_berlaku_tat));
-            return $date;
-          })
-          ->make(true);
+        ->addIndexColumn()
+        ->addColumn('tmt', function ($row) {
+          $date = date('d M Y', strtotime($row->masa_berlaku_tmt));
+          return $date;
+        })
+        ->addColumn('tat', function ($row) {
+          $date = date('d M Y', strtotime($row->masa_berlaku_tat));
+          return $date;
+        })
+        ->make(true);
     }
 
     $totalMOU = DB::table('kerjasama')
@@ -152,7 +168,7 @@ class LoginController extends Controller
     $totalIA = DB::table('kerjasama')
       ->where('jenis_perjanjian', 'Implementation Arrangement (IA)')
       ->count();
-    
+
     return view('index', compact('totalMOU', 'totalMOA', 'totalIA'));
   }
 }

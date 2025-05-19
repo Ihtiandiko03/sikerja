@@ -103,6 +103,8 @@ class MonitoringTelaahKerjasamaController extends Controller
       ->orderBy('riwayat_telaah.created_at', 'desc')
       ->get();
 
+    // dd($id);
+
     return view('monitoring_telaah.show', compact('telaah', 'unitKerja', 'aktivitas'));
   }
 }

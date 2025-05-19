@@ -71,6 +71,7 @@
               <tr class="text-nowrap">
                 <th>#</th>
                 <th>Aksi</th>
+                <th>Tanggal Pengajuan</th>
                 <th>Unit Kerja/Inisiator</th>
                 <th>Status</th>
                 <th>Mitra</th>
@@ -110,6 +111,17 @@
         columns: [
           {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center', orderable: false, searchable: false},
           {data: 'action', name: 'action', className: 'text-center', orderable: false, searchable: false},
+            {data: 'created_at', name: 'created_at', render: function(data, type, row) {
+            if (!data) return '';
+            var date = new Date(data);
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var hours = date.getHours().toString().padStart(2, '0');
+            var minutes = date.getMinutes().toString().padStart(2, '0');
+            var seconds = date.getSeconds().toString().padStart(2, '0');
+            return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+            }},
           {data: 'nama_unit', name: 'nama_unit'},
           {data: 'status', name: 'status', className: 'text-center', orderable: false, searchable: false},
           {data: 'nama_instansi_mitra', name: 'nama_instansi_mitra'},

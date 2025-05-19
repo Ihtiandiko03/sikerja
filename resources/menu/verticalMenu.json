@@ -16,7 +16,10 @@
       "url": "/",
       "name": "Master Data",
       "icon": "menu-icon tf-icons bx bx-data",
-      "slug": ["klasifikasi-mitra.index", "bentuk-kegiatan.index"],
+      "slug": [
+        "klasifikasi-mitra.index",
+        "bentuk-kegiatan.index"
+      ],
       "submenu": [
         {
           "url": "/klasifikasi-mitra",
@@ -31,13 +34,31 @@
       ]
     },
     {
+      "url": "/",
+      "name": "User Management",
+      "icon": "menu-icon tf-icons bx bx-user",
+      "slug": [
+        "user.index"
+      ],
+      "submenu": [
+        {
+          "url": "/user",
+          "name": "Tambah User",
+          "slug": "user.index"
+        }
+      ]
+    },
+    {
       "menuHeader": "Stakeholder"
     },
     {
       "url": "/",
       "name": "Telaah Kerja Sama",
       "icon": "menu-icon tf-icons bx bx-book-content",
-      "slug": ["telaah-kerja-sama.create", "monitoring-telaah-kerja-sama"],
+      "slug": [
+        "telaah-kerja-sama.create",
+        "monitoring-telaah-kerja-sama"
+      ],
       "submenu": [
         {
           "url": "/telaah-kerja-sama/create",
@@ -55,7 +76,11 @@
       "url": "/",
       "name": "Repository",
       "icon": "menu-icon tf-icons bx bx-copy-alt",
-      "slug": ["repository-kerja-sama.create", "repository-kerja-sama.index", "repository-kerja-sama.show"],
+      "slug": [
+        "repository-kerja-sama.create",
+        "repository-kerja-sama.index",
+        "repository-kerja-sama.show"
+      ],
       "submenu": [
         {
           "url": "/repository-kerja-sama/create",

@@ -21,15 +21,15 @@ class RepositoryKerjasamaController extends Controller
       $data = Kerjasama::leftJoin('kerjasama_mitra as ksm', 'ksm.id_kerjasama', '=', 'kerjasama.id')
         ->leftJoin('klasifikasi_mitra as kmtr', 'kmtr.id', '=', 'ksm.klasifikasi_mitra')
         ->select(
-            'kerjasama.*',
-            'u.nama_unit',
-            'bk.bentuk_kegiatan as bentuk_kegiatan_desc',
-            DB::raw("GROUP_CONCAT(ksm.nama_instansi_mitra ORDER BY ksm.id SEPARATOR ', ') as list_mitra"),
-            DB::raw("GROUP_CONCAT(kmtr.klasifikasi_mitra ORDER BY ksm.id SEPARATOR ', ') as list_klasifikasi_mitra"),
+          'kerjasama.*',
+          'u.nama_unit',
+          'bk.bentuk_kegiatan as bentuk_kegiatan_desc',
+          DB::raw("GROUP_CONCAT(ksm.nama_instansi_mitra ORDER BY ksm.id SEPARATOR ', ') as list_mitra"),
+          DB::raw("GROUP_CONCAT(kmtr.klasifikasi_mitra ORDER BY ksm.id SEPARATOR ', ') as list_klasifikasi_mitra")
         )
         ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'kerjasama.unit_kerja_inisiator')
         ->join('bentuk_kegiatan as bk', 'bk.id', '=', 'kerjasama.bentuk_kegiatan');
-       
+
       if (Session::get('role_kerja') == 'user') {
         $data->where('kerjasama.created_by', Session::get('id'));
       }
@@ -45,13 +45,13 @@ class RepositoryKerjasamaController extends Controller
       if ($request->status_kerjasama) {
         $data->where('kerjasama.status_kerjasama', $request->status_kerjasama);
       }
-      
+
       $data->groupBy('kerjasama.id', 'u.nama_unit');
       $data->orderBy('kerjasama.created_at', 'desc');
 
       return Datatables::of($data)
         ->addIndexColumn()
-        ->addColumn('status', function($row){
+        ->addColumn('status', function ($row) {
           if ($row->status_kerjasama === 'AKTIF') {
             $bg_color = 'bg-label-success';
           } elseif ($row->status_kerjasama === 'KADALUARSA') {
@@ -59,14 +59,20 @@ class RepositoryKerjasamaController extends Controller
           } else {
             $bg_color = 'bg-label-info';
           }
-          $btn = '<span class="badge '.$bg_color.'">'.$row->status_kerjasama.'</span>';
+          $btn = '<span class="badge ' . $bg_color . '">' . $row->status_kerjasama . '</span>';
           return $btn;
         })
-        ->addColumn('action', function($row){
-            $btn = '<a href="'.route('repository-kerja-sama.show', Crypt::encrypt($row->id)).'" class="btn btn-sm btn-icon btn-outline-primary"><span class="icon-base bx bx-show-alt icon-md"></span></a>';
-            $btn .= '<a href="javascript:;" class="btn btn-sm btn-icon btn-outline-danger ms-2 btn-delete" data-id="'.Crypt::encrypt($row->id).'" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="icon-base bx bx-trash-alt icon-md"></span></a>';
+        ->addColumn('action', function ($row) {
+          $btn =
+            '<a href="' .
+            route('repository-kerja-sama.show', Crypt::encrypt($row->id)) .
+            '" class="btn btn-sm btn-icon btn-outline-primary"><span class="icon-base bx bx-show-alt icon-md"></span></a>';
+          $btn .=
+            '<a href="javascript:;" class="btn btn-sm btn-icon btn-outline-danger ms-2 btn-delete" data-id="' .
+            Crypt::encrypt($row->id) .
+            '" data-bs-toggle="modal" data-bs-target="#deleteModal"><span class="icon-base bx bx-trash-alt icon-md"></span></a>';
 
-            return $btn;
+          return $btn;
         })
         ->rawColumns(['action', 'status'])
         ->make(true);
@@ -193,7 +199,7 @@ class RepositoryKerjasamaController extends Controller
         ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'kerjasama.unit_kerja_inisiator')
         ->join('bentuk_kegiatan as bk', 'bk.id', '=', 'kerjasama.bentuk_kegiatan')
         ->findOrFail($id);
-    } elseif(Session::get('role_kerja') == 'user') {
+    } elseif (Session::get('role_kerja') == 'user') {
       $kerjasama = Kerjasama::selectRaw('kerjasama.*, u.nama_unit, bk.bentuk_kegiatan as bentuk_kegiatan_desc')
         ->where('kerjasama.created_by', Session::get('id'))
         ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'kerjasama.unit_kerja_inisiator')
@@ -203,7 +209,7 @@ class RepositoryKerjasamaController extends Controller
       abort(403, 'Unauthorized page.');
     }
 
-    $unitKerja = KerjasamaUnitKerja::selectRaw('kerjasama_unit_kerja.*, u.nama_unit')      
+    $unitKerja = KerjasamaUnitKerja::selectRaw('kerjasama_unit_kerja.*, u.nama_unit')
       ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'kerjasama_unit_kerja.unit_kerja')
       ->where('id_kerjasama', $id)
       ->get();
@@ -212,18 +218,16 @@ class RepositoryKerjasamaController extends Controller
       ->join('klasifikasi_mitra as km', 'km.id', '=', 'kerjasama_mitra.klasifikasi_mitra')
       ->where('id_kerjasama', $id)
       ->get();
-    
+
     return view('repository_kerjasama.show', compact('kerjasama', 'unitKerja', 'mitra'));
   }
 
   public function edit($encryptedId)
   {
-
   }
 
   public function update($encryptedId)
   {
-
   }
 
   public function delete($encryptedId)

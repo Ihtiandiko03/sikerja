@@ -11,6 +11,7 @@ use App\Http\Controllers\TelaahKerjasamaController;
 use App\Http\Controllers\KlasifikasiMitraController;
 use App\Http\Controllers\RepositoryKerjasamaController;
 use App\Http\Controllers\MonitoringTelaahKerjasamaController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'halamanutama'])->name('halamanutama');
 Route::get('/login', [LoginController::class, 'login'])->name('login');
@@ -38,6 +39,14 @@ Route::middleware(['role:admin'])
   ->prefix('telaah-kerja-sama')
   ->group(function () {
     Route::put('/{id}/validasi', [TelaahKerjasamaController::class, 'validasi'])->name('telaah-kerja-sama.validasi');
+  });
+
+Route::middleware(['role:admin'])
+  ->prefix('user')
+  ->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.index');
+    Route::post('/store', [UserController::class, 'store'])->name('user.store');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
   });
 
 Route::middleware(['role:user'])

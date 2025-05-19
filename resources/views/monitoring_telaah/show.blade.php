@@ -151,17 +151,17 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label" >Tanggal Masuk BKMP</label>
+                                    <label class="form-label" >Tanggal Masuk</label>
                                     <div class="input-group input-group-merge">
                                         <span class="input-group-text"><i class="bx bx-calendar"></i></span>
                                         <input type="text" class="form-control"  readonly value="{{$telaah->tanggal_masuk_bkmp ? $telaah->tanggal_masuk_bkmp : '-'}}"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label" >Tanggal Keluar BKMP</label>
+                                    <label class="form-label" >Tanggal Keluar</label>
                                     <div class="input-group input-group-merge">
                                         <span class="input-group-text"><i class="bx bx-calendar"></i></span>
-                                        <input type="text" class="form-control" value="{{$telaah->tanggal_keluar_bkmp? $telaah->tanggal_keluar_bkmp : '-'}}" readonly/>
+                                        <input type="text" class="form-control" value="{{ $telaah->status_telaah == 'Selesai' ? $telaah->tanggal_keluar_bkmp : '-' }}" readonly/>
                                     </div>
                                 </div>
                             </div>
