@@ -24,9 +24,10 @@ class TelaahKerjasamaController extends Controller
 
   public function create()
   {
-    $unit = DB::table('db_simpeg.tb_unit')
-      ->select('kd_unit', 'nama_unit')
-      ->get();
+    $unit = DB::connection('db_simpeg')
+          ->table('tb_unit')
+          ->select('kd_unit', 'nama_unit')
+          ->get();
 
     $klasifikasi_mitra = KlasifikasiMitra::all();
     $bentuk_kegiatan = BentukKegiatan::all();
@@ -141,7 +142,7 @@ class TelaahKerjasamaController extends Controller
     if (Session::get('role_kerja') == 'admin') {
       $telaah = Telaah::findOrFail($decryptId);
     } elseif (Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::where('created_by', Session::get('id'))->findOrFail($decryptId);
+      $telaah = Telaah::where('unit_kerja_inisiator', Session::get('id_unit'))->findOrFail($decryptId);
     } else {
       abort(403, 'Unauthorized page.');
     }
@@ -168,7 +169,7 @@ class TelaahKerjasamaController extends Controller
     if (Session::get('role_kerja') == 'admin') {
       $telaah = Telaah::findOrFail($decryptId);
     } elseif (Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::where('created_by', Session::get('id'))->findOrFail($decryptId);
+      $telaah = Telaah::where('unit_kerja_inisiator', Session::get('id_unit'))->findOrFail($decryptId);
     } else {
       abort(403, 'Unauthorized page.');
     }
@@ -276,7 +277,7 @@ class TelaahKerjasamaController extends Controller
       $telaah = Telaah::where('status_telaah', 'Dalam Proses')->findOrFail($decryptId);
     } elseif (Session::get('role_kerja') == 'user') {
       $telaah = Telaah::where('status_telaah', 'Dalam Proses')
-        ->where('created_by', Session::get('id'))
+        ->where('unit_kerja_inisiator', Session::get('id_unit'))
         ->findOrFail($decryptId);
     } else {
       abort(403, 'Unauthorized page.');

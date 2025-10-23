@@ -40,7 +40,7 @@ class Restricted
       $this->current_level = $data['levels'];
       $this->current_rule = $data['rule'];
     }
-    if ($this->current_rule == 'dosen') {
+    if ($this->current_rule == 'staff' || $this->current_rule == 'pimpinan' || $this->current_rule == 'dosen' || $this->current_rule == 'akademik' || $this->current_rule == 'prodi') {
       return false;
     } else {
       for ($i = 0; $i < count($this->apps); $i++) {

@@ -12,25 +12,38 @@ class UserController extends Controller
 {
   public function index(Request $request)
   {
-    if ($request->ajax()) {
-      $data = User::select(['id', 'name', 'email', 'role_kerja']);
-      return datatables()
-        ->of($data)
-        ->addIndexColumn()
-        ->addColumn('action', function ($row) {
-          return '<button class="btn btn-danger btn-delete" data-id="' .
-            $row->id .
-            '" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>';
-        })
-        ->rawColumns(['action'])
-        ->make(true);
-    }
+      if ($request->ajax()) {
+          $data = User::select(['id', 'name', 'email', 'role_kerja', 'id_unit']);
+          return datatables()
+              ->of($data)
+              ->addIndexColumn()
+              ->addColumn('nama_unit', function ($row) {
+                  $unit = DB::connection('db_simpeg')
+                      ->table('tb_unit')
+                      ->where('kd_unit', $row->id_unit)
+                      ->value('nama_unit');
+                  return $unit ?? '-';
+              })
+              // ->addColumn('action', function ($row) {
+              //     return '<button class="btn btn-danger btn-delete" data-id="' .
+              //         $row->id .
+              //         '" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>';
+              // })
+              ->rawColumns(['action'])
+              ->make(true);
+      }
 
-    $pegawai = DB::table('db_simpeg.tb_pegawai')
-      ->select('id_pegawai', 'nama_pegawai', 'email')
-      ->get();
+      $pegawai = DB::connection('db_simpeg')
+          ->table('tb_pegawai')
+          ->select('id_pegawai', 'nama_pegawai', 'email')
+          ->get();
 
-    return view('user.index', compact('pegawai'));
+      $unit = DB::connection('db_simpeg')
+          ->table('tb_unit')
+          ->select('kd_unit', 'nama_unit')
+          ->get();
+
+      return view('user.index', compact('pegawai', 'unit'));
   }
 
   public function store(Request $request)
@@ -40,14 +53,16 @@ class UserController extends Controller
       'email' => 'required|email|unique:users,email',
       'role_kerja' => 'required',
       'id_pegawai' => 'required',
+      'id_unit' => 'required'
     ]);
 
     // dd($request->all());
     $user = new User();
     $user->name = $request->nama;
+    $user->id_unit = $request->id_unit;
     $user->id_pegawai = $request->id_pegawai;
     $user->email = $request->email;
-    $user->password = Crypt::encryptString('Kerjasama123');
+    $user->password = Crypt::encryptString('OADHASdbuoadbo^&%@&#^%ausdabodOUSAd&AS%DAGSd7asgd7asd9da9sdv');
     $user->role_kerja = $request->role_kerja;
     $user->save();
 

@@ -50,12 +50,24 @@
                             <input type="hidden" name="email" id="pegawai_email">
                             <input type="hidden" name="nama" id="nama_pegawai">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="role_kerja" class="form-label">Role</label>
                             <select class="form-select select2-role" id="role_kerja" name="role_kerja" required>
                                 <option value="">Pilih Role</option>
                                 <option value="0">Admin</option>
                                 <option value="1">User</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="id_unit" class="form-label">Pilih Pegawai</label>
+                            <select class="form-select select2-unit" id="id_unit" name="id_unit" required>
+                                <option value="">Pilih Unit</option>
+                                @foreach($unit as $u)
+                                    <option 
+                                        value="{{ $u->kd_unit }}"> 
+                                        {{ $u->nama_unit }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-1 d-flex align-items-end">
@@ -78,10 +90,11 @@
             <thead class="table-light">
               <tr class="text-nowrap">
                 <th>#</th>
+                <th>Unit</th>
                 <th>Nama</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Aksi</th>
+                {{-- <th>Aksi</th> --}}
               </tr>
             </thead>
             <tbody>
@@ -132,6 +145,7 @@
         },
         columns: [
           {data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center', orderable: false, searchable: false},
+          {data: 'nama_unit', name: 'nama_unit'},
           {data: 'name', name: 'name'},
           {data: 'email', name: 'email'},
           {
@@ -142,7 +156,7 @@
               return data == 0 ? 'Admin' : 'User';
             }
           },
-          {data: 'action', name: 'action', className: 'text-center', orderable: false, searchable: false}
+          // {data: 'action', name: 'action', className: 'text-center', orderable: false, searchable: false}
         ]
       });
 
@@ -175,6 +189,11 @@
                 placeholder: "Pilih Role",
                 allowClear: true,
                 minimumResultsForSearch: Infinity
+            });
+            $('.select2-unit').select2({
+                width: '100%',
+                placeholder: "Pilih Unit",
+                allowClear: true
             });
         });
     </script>

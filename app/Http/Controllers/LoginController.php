@@ -100,19 +100,22 @@ class LoginController extends Controller
         'apps' => $tmpApps,
         'levels' => $tmpLevel,
         'role_kerja' => 'user',
+        'id_unit' => '-99',
       ];
-      // dd($userData);
 
       // Cek di tabel user berdasarkan email, jika ada sesuaikan role_kerja dengan role di tabel user
       $user = \DB::table('users')
         ->where('id_pegawai', $userData['id'])
         ->first();
+
+      
       if (!$user) {
         return redirect()->route('restricted_page');
       }
       if (isset($user->role_kerja)) {
         // dd($user);
         $userData['role_kerja'] = $user->role_kerja == 0 ? 'admin' : 'user';
+        $userData['id_unit'] = $user->id_unit;
       }
 
       Session::put($userData);

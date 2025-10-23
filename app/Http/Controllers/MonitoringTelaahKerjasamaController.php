@@ -7,6 +7,7 @@ use App\Models\Telaah;
 use Illuminate\Http\Request;
 use App\Models\RiwayatTelaah;
 use App\Models\TelaahUnitKerja;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 
@@ -15,15 +16,11 @@ class MonitoringTelaahKerjasamaController extends Controller
   public function index(Request $request)
   {
     if ($request->ajax()) {
-      $data = Telaah::selectRaw('telaah.*, u.nama_unit')->join(
-        'db_simpeg.tb_unit as u',
-        'u.kd_unit',
-        '=',
-        'telaah.unit_kerja_inisiator'
-      );
+      $data = Telaah::query();
 
       if (Session::get('role_kerja') == 'user') {
-        $data->where('telaah.created_by', Session::get('id'));
+        // $data->where('kerjasama.created_by', Session::get('id'));
+        $data->where('telaah.unit_kerja_inisiator', Session::get('id_unit'));
       }
 
       if ($request->jenis_kerja_sama) {
@@ -40,8 +37,15 @@ class MonitoringTelaahKerjasamaController extends Controller
 
       $data->orderBy('telaah.created_at', 'desc');
 
-      return Datatables::of($data)
+      $units = DB::connection('db_simpeg')
+        ->table('tb_unit')
+        ->pluck('nama_unit', 'kd_unit');
+
+      return DataTables::of($data)
         ->addIndexColumn()
+        ->addColumn('nama_unit', function ($row) use ($units) {
+          return $units[$row->unit_kerja_inisiator] ?? '-';
+        })
         ->addColumn('action', function ($row) {
           $btn =
             '<a href="' .
@@ -57,8 +61,7 @@ class MonitoringTelaahKerjasamaController extends Controller
           } else {
             $bg_color = 'bg-label-info';
           }
-          $btn = '<span class="badge ' . $bg_color . '">' . $row->status_telaah . '</span>';
-          return $btn;
+          return '<span class="badge ' . $bg_color . '">' . $row->status_telaah . '</span>';
         })
         ->rawColumns(['action', 'status'])
         ->make(true);
@@ -71,39 +74,52 @@ class MonitoringTelaahKerjasamaController extends Controller
   {
     $id = Crypt::decrypt($encryptedId);
 
+    $query = Telaah::query()
+      ->join('klasifikasi_mitra as km', 'km.id', '=', 'telaah.klasifikasi_mitra')
+      ->join('bentuk_kegiatan as bk', 'bk.id', '=', 'telaah.bentuk_kegiatan')
+      ->selectRaw('telaah.*, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc');
+
     if (Session::get('role_kerja') == 'admin') {
-      $telaah = Telaah::selectRaw(
-        'telaah.*, u.nama_unit, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc'
-      )
-        ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah.unit_kerja_inisiator')
-        ->join('klasifikasi_mitra as km', 'km.id', '=', 'telaah.klasifikasi_mitra')
-        ->join('bentuk_kegiatan as bk', 'bk.id', '=', 'telaah.bentuk_kegiatan')
-        ->findOrFail($id);
+      $telaah = $query->findOrFail($id);
     } elseif (Session::get('role_kerja') == 'user') {
-      $telaah = Telaah::selectRaw(
-        'telaah.*, u.nama_unit, km.klasifikasi_mitra as klasifikasi_mitra_desc, bk.bentuk_kegiatan as bentuk_kegiatan_desc'
-      )
-        ->where('telaah.created_by', Session::get('id'))
-        ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah.unit_kerja_inisiator')
-        ->join('klasifikasi_mitra as km', 'km.id', '=', 'telaah.klasifikasi_mitra')
-        ->join('bentuk_kegiatan as bk', 'bk.id', '=', 'telaah.bentuk_kegiatan')
+      $telaah = $query
+        ->where('telaah.unit_kerja_inisiator', Session::get('id_unit'))
         ->findOrFail($id);
     } else {
       abort(403, 'Unauthorized page.');
     }
 
-    $unitKerja = TelaahUnitKerja::selectRaw('telaah_unit_kerja.*, u.nama_unit')
-      ->join('db_simpeg.tb_unit as u', 'u.kd_unit', '=', 'telaah_unit_kerja.unit_kerja')
-      ->where('id_telaah', $id)
-      ->get();
+    $unit = DB::connection('db_simpeg')
+      ->table('tb_unit')
+      ->where('kd_unit', $telaah->unit_kerja_inisiator)
+      ->value('nama_unit');
+    $telaah->nama_unit = $unit ?? '-';
 
-    $aktivitas = RiwayatTelaah::selectRaw('riwayat_telaah.*, p.nama_pegawai')
-      ->join('db_simpeg.tb_pegawai as p', 'p.id_pegawai', '=', 'riwayat_telaah.created_by')
-      ->where('telaah_id', $id)
+    $unitKerja = TelaahUnitKerja::where('id_telaah', $id)->get();
+    $kd_units = $unitKerja->pluck('unit_kerja');
+    $nama_units = DB::connection('db_simpeg')
+      ->table('tb_unit')
+      ->whereIn('kd_unit', $kd_units)
+      ->pluck('nama_unit', 'kd_unit');
+    $unitKerja->transform(function ($item) use ($nama_units) {
+      $item->nama_unit = $nama_units[$item->unit_kerja] ?? '-';
+      return $item;
+    });
+
+    $aktivitas = RiwayatTelaah::where('telaah_id', $id)
       ->orderBy('riwayat_telaah.created_at', 'desc')
       ->get();
 
-    // dd($id);
+    $pegawai_ids = $aktivitas->pluck('created_by');
+    $pegawai_nama = DB::connection('db_simpeg')
+      ->table('tb_pegawai')
+      ->whereIn('id_pegawai', $pegawai_ids)
+      ->pluck('nama_pegawai', 'id_pegawai');
+
+    $aktivitas->transform(function ($item) use ($pegawai_nama) {
+      $item->nama_pegawai = $pegawai_nama[$item->created_by] ?? '-';
+      return $item;
+    });
 
     return view('monitoring_telaah.show', compact('telaah', 'unitKerja', 'aktivitas'));
   }
